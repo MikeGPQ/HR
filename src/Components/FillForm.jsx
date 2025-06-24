@@ -1,31 +1,88 @@
-export function fillForm() {
+import { useState } from "react";
+import { setData } from "../firestore";
+
+export function FillForm() {
+    const [user, setUser] = useState({
+        nombre: "",
+        correo: "",
+        puesto: "",
+        image: "" 
+    });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setUser(prev => ({ ...prev, [name]: value }));
+    }
+
+    async function handleSubmit(e) {
+        e.preventDefault(); 
+        try {
+            await setData("empleados", user);
+            setUser({ nombre: "", correo: "", puesto: "", image: "" });
+        } catch (error) {
+            console.error("Error adding user:", error);
+        }
+    }
+
     return (
-        <div style={{ width: '100%', paddingRight: '15px', paddingLeft: '15px', marginRight: 'auto', marginLeft: 'auto', maxWidth: '1140px' }}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', marginRight: '-15px', marginLeft: '-15px', justifyContent: 'center', marginTop: '3rem' }}>
-                <div style={{ flex: '0 0 50%', maxWidth: '50%', paddingRight: '15px', paddingLeft: '15px' }}>
-                    <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', minWidth: '0', wordWrap: 'break-word', backgroundColor: '#fff', backgroundClip: 'border-box', border: '1px solid rgba(0,0,0,.125)', borderRadius: '0.25rem' }}>
-                        <div style={{ padding: '0.75rem 1.25rem', marginBottom: '0', backgroundColor: '#0d6efd', borderBottom: '1px solid rgba(0,0,0,.125)', color: 'white' }}>
-                            <h4 style={{ marginBottom: '0', fontSize: '1.5rem', fontWeight: '500' }}>Login</h4>
-                        </div>
-                        <div style={{ flex: '1 1 auto', padding: '1.25rem' }}>
-                            <form>
-                                <div style={{ marginBottom: '1rem' }}>
-                                    <label htmlFor="email" style={{ display: 'inline-block', marginBottom: '0.5rem', fontSize: '1rem', fontWeight: '400' }}>Email address</label>
-                                    <input type="email" style={{ display: 'block', width: '100%', padding: '0.375rem 0.75rem', fontSize: '1rem', fontWeight: '400', lineHeight: '1.5', color: '#212529', backgroundColor: '#fff', backgroundClip: 'padding-box', border: '1px solid #ced4da', borderRadius: '0.25rem', transition: 'border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out' }} id="email" placeholder="Enter your email" />
-                                </div>
-                                <div style={{ marginBottom: '1rem' }}>
-                                    <label htmlFor="password" style={{ display: 'inline-block', marginBottom: '0.5rem', fontSize: '1rem', fontWeight: '400' }}>Password</label>
-                                    <input type="password" style={{ display: 'block', width: '100%', padding: '0.375rem 0.75rem', fontSize: '1rem', fontWeight: '400', lineHeight: '1.5', color: '#212529', backgroundColor: '#fff', backgroundClip: 'padding-box', border: '1px solid #ced4da', borderRadius: '0.25rem', transition: 'border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out' }} id="password" placeholder="Enter your password" />
-                                </div>
-                                <div style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center' }}>
-                                    <input type="checkbox" style={{ width: '1em', height: '1em', marginTop: '0.25em', verticalAlign: 'top', backgroundColor: '#fff', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', backgroundSize: 'contain', border: '1px solid rgba(0,0,0,.25)', marginRight: '0.5rem' }} id="rememberMe" />
-                                    <label style={{ marginBottom: '0', fontSize: '1rem', fontWeight: '400' }} htmlFor="rememberMe">Remember me</label>
-                                </div>
-                                <button type="submit" style={{ color: '#fff', backgroundColor: '#0d6efd', borderColor: '#0d6efd', display: 'inline-block', fontWeight: '400', lineHeight: '1.5', textAlign: 'center', textDecoration: 'none', verticalAlign: 'middle', cursor: 'pointer', userSelect: 'none', padding: '0.375rem 0.75rem', fontSize: '1rem', borderRadius: '0.25rem', border: '1px solid transparent', transition: 'color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out' }}>Login</button>
-                            </form>
-                        </div>
-                    </div>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh', padding: '1rem' }}>
+            <div style={{ backgroundColor: 'white', borderRadius: '0.25rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', width: '100%', maxWidth: '500px' }}>
+                <div style={{ padding: '1rem', backgroundColor: '#4CAF50', color: 'white', textAlign: 'center' }}>
+                    <h4 style={{ margin: 0, fontSize: '1.25rem', fontWeight: '500' }}>Add New User</h4>
                 </div>
+
+                <form style={{ padding: '2rem' }}>
+                    
+                    <div style={{ marginBottom: '1.5rem', width: '100%' }}>
+                        <label htmlFor="name" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: '#555', textAlign: 'left' }}>Full Name</label>
+                        <input
+                            type="text"
+                            id="nombre"
+                            name="nombre"
+                            value={user.nombre}
+                            onChange={handleChange}
+                            style={{ width: '100%', padding: '0.75rem', fontSize: '0.9rem', border: '1px solid #ddd', borderRadius: '0.25rem', display: 'block', ':focus': { outline: 'none', borderColor: '#4CAF50' } }}
+                            placeholder="Enter full name"
+                        />
+                    </div>
+
+                    <div style={{ marginBottom: '1.5rem', width: '100%' }}>
+                        <label htmlFor="email" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: '#555', textAlign: 'left' }}>Email Address</label>
+                        <input
+                            type="email"
+                            id="correo"
+                            name="correo"
+                            value={user.correo}
+                            onChange={handleChange}
+                            style={{ width: '100%', padding: '0.75rem', fontSize: '0.9rem', border: '1px solid #ddd', borderRadius: '0.25rem', display: 'block', ':focus': { outline: 'none', borderColor: '#4CAF50' } }}
+                            placeholder="Enter email address"
+                        />
+                    </div>
+
+                    <div style={{ marginBottom: '1.5rem', width: '100%' }}>
+                        <label htmlFor="puesto" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: '#555', textAlign: 'left' }}>Job Position</label>
+                        <input
+                            type="text"
+                            id="puesto"
+                            name="puesto"
+                            value={user.puesto}
+                            onChange={handleChange}
+                            style={{ width: '100%', padding: '0.75rem', fontSize: '0.9rem', border: '1px solid #ddd', borderRadius: '0.25rem', display: 'block', ':focus': { outline: 'none', borderColor: '#4CAF50' } }}
+                            placeholder="Enter job position"
+                        />
+                    </div>
+
+
+                    
+
+                    <button
+                        type="submit"
+                        onClick={handleSubmit}
+                        style={{ width: '100%', padding: '0.75rem', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '0.25rem', fontSize: '0.9rem', fontWeight: '500', cursor: 'pointer', marginTop: '1rem', ':hover': { backgroundColor: '#388E3C' } }}
+                    >
+                        Add User
+                    </button>
+                </form>
             </div>
         </div>
     );
