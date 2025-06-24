@@ -15,7 +15,7 @@ export function Register() {
         e.preventDefault();
         try {
             await register(user);
-            navigate("/login");
+            navigate("/users");
         } catch (err) {
             setError(err.message);
         }

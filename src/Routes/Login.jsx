@@ -15,7 +15,7 @@ export function Login() {
         e.preventDefault();
         try {
             await login(user);
-            navigate("/aztecs");
+            navigate("/users");
         } catch (err) {
             setError(err.message);
         }
