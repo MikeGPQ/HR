@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { getData } from "../firestore";
 import { Card } from "../Components/Card"
 import { FillForm } from "../Components/FillForm"
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../firebase";
 
 export function UserList() {
     const [usuarios, setUsuarios] = useState([]);
@@ -16,15 +18,17 @@ export function UserList() {
         setIndex(buttonIndex === 0 ? 1 : 0)
     }
     
-
     useEffect(() => {
-        async function fetchUserData() {
-            const userData = await getData("empleados");
+        const unsubscribe = onSnapshot(collection(db, "empleados"), (snapshot) => {
+            const userData = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
             setUsuarios(userData);
-        } 
+        });
 
-        fetchUserData();
-    }, [buttonIndex]);
+        return () => unsubscribe();
+    }, []);
 
     return (
         <div>
@@ -37,10 +41,13 @@ export function UserList() {
             {buttonValues[buttonIndex].turnOn && (<FillForm />)}
 
             {!buttonValues[buttonIndex].turnOn && (<div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                {usuarios.map((usuario, index) => (
+                {usuarios
+                    .filter((usuario) => usuario.active)
+                    .map((usuario) => (
                     <Card
-                        key={index}
-                        image={usuario.imagen}
+                        key={usuario.id}
+                        id={usuario.id}
+                        image={usuario.image}
                         name={usuario.nombre}
                         mail={usuario.correo}
                         puesto={usuario.puesto}

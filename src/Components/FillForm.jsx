@@ -6,7 +6,8 @@ export function FillForm() {
         nombre: "",
         correo: "",
         puesto: "",
-        image: "" 
+        image: "",
+        active: true
     });
 
     const handleChange = (e) => {
