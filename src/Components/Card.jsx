@@ -87,10 +87,7 @@ export function Card({ id, image, name, mail, puesto }) {
                 )}
 
                 {editable && (
-
-
                     <>
-
                         <input
                             type="text"
                             id="nombre"
@@ -100,9 +97,9 @@ export function Card({ id, image, name, mail, puesto }) {
                         />
 
                         <input
-                            type="email"
+                            type="text"
                             id="correo"
-                            name="coreo"
+                            name="correo"
                             onChange={handleChange}
                             value={user.correo}
                         />
