@@ -1,6 +1,5 @@
 import { collection, getDocs, setDoc, doc, updateDoc, deleteDoc} from "firebase/firestore";
 import { db } from './firebase';
-import React, { useState } from "react";
 
 
 export async function getData(collectionName) {
